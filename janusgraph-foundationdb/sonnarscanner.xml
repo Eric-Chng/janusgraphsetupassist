@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.janusgraph</groupId>
+    <artifactId>janusgraph-foundationdb</artifactId>
+    <packaging>pom</packaging>
+    <version>0.5.3-nugraph-1.7.6-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <sonar.host.url>https://sonar-01-es.vip.es.ebay.com</sonar.host.url>
+        <sonar.projectKey>NuGraph</sonar.projectKey>
+        <sonar.java.coverage.reportPaths>target/jacoco.exec</sonar.java.coverage.reportPaths>
+        <sonar.sources>src/main/java</sonar.sources>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>raptor.releases</id>
+            <name>eBay Central Release Repository</name>
+            <url>https://ebaycentral.qa.ebay.com/content/repositories/releases/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>raptor.snapshots</id>
+            <name>eBay Central Snapshot Repository</name>
+            <url>https://ebaycentral.qa.ebay.com/content/repositories/snapshots/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>ebaycentral.releases</id>
+            <name>eBay Central Release Repository</name>
+            <url>https://ebaycentral.corp.ebay.com/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>ebaycentral.snapshots</id>
+            <name>eBay Central Snapshot Repository</name>
+            <url>https://ebaycentral.corp.ebay.com/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>ebaycentral.thirdparty</id>
+            <name>eBay Central Release Repository</name>
+            <url>https://ebaycentral.corp.ebay.com/content/repositories/thirdparty/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>ebaycentral.releases</id>
+            <name>eBay Central Release Repository</name>
+            <url>https://ebaycentral.corp.ebay.com/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>ebaycentral.snapshots</id>
+            <name>eBay Central Snapshot Repository</name>
+            <url>https://ebaycentral.corp.ebay.com/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.9.0.2155</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

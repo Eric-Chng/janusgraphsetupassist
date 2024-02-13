@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="10 seconds" packagingData="true" debug="true">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log/janus-fdb.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread]%logger{36}[%L] %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <immediateFlush>true</immediateFlush>
+    </appender>
+    <appender name="NOP" class="ch.qos.logback.core.helpers.NOPAppender"/>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %highlight(%-5level) [%thread] %green(%logger{20})[%L] - %msg%n</pattern>
+
+            <!--pattern>[%-5level] [%date{MM/dd/YYYY HH:mm:ss.SSS}] [%thread] %logger{1} - %msg%n</pattern-->
+
+            <!--pattern>%d [%t] %-5p %c - %m%n</pattern-->
+            <!-- this provides nice color highlighting of log severity on the console
+                <pattern>%d [%t]  %highlight(%-5p) %green(%logger{15}) - %m%n</pattern>
+             -->
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!--<withJansi>false</withJansi>-->
+    </appender>
+
+    <logger name="nop" level="DEBUG" additivity="false">
+        <appender-ref ref="NOP"/>
+    </logger>
+
+<!--    <logger name="org.janusgraph" level="INFO" additivity="false">-->
+<!--        <appender-ref ref="FILE"/>-->
+<!--    </logger>-->
+
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+    </root>
+</configuration>

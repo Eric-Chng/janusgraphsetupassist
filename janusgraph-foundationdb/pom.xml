@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.janusgraph</groupId>
+    <artifactId>janusgraph-foundationdb</artifactId>
+    <version>1.0.0-nugraph-1.9.4-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>JanusGraph FoundationDB Storage Adapter</name>
+
+    <properties>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <jdk.version>1.8</jdk.version>
+        <foundationdb.version>6.3.25</foundationdb.version>
+        <janusgraph.version>1.0.0</janusgraph.version>
+        <nugraph-tracing.version>1.6.5-RELEASE</nugraph-tracing.version>
+        <dependency.plugin.version>2.10</dependency.plugin.version>
+        <test.skip.default>false</test.skip.default>
+        <test.skip.tp>true</test.skip.tp>
+        <testcontainers.version>1.18.3</testcontainers.version>
+        <log4j.version>1.2.16</log4j.version>
+    </properties>
+
+    <developers>
+       <developer>
+           <name>Ted Wilmes</name>
+           <email>twilmes@gmail.com</email>
+       </developer>
+       <developer>
+           <name>Jun Li</name>
+           <email>junli5@ebay.com</email>
+       </developer>
+       <developer>
+           <name>Hieu Nguyen</name>
+           <email>hieunguyen@ebay.com</email>
+       </developer>
+    </developers>
+
+    <licenses>
+        <license>
+           <name>The Apache Software License, Version 2.0</name>
+           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-core</artifactId>
+            <version>${janusgraph.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-backend-testutils</artifactId>
+            <version>${janusgraph.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-test</artifactId>
+            <version>${janusgraph.version}</version>
+            <scope>test</scope>
+       </dependency>
+
+        <dependency>
+            <groupId>com.ebay.nugraph</groupId>
+            <artifactId>nugraph-calltracing</artifactId>
+            <version>${nugraph-tracing.version}</version>
+        </dependency>
+
+       <dependency>
+           <groupId>org.foundationdb</groupId>
+           <artifactId>fdb-java</artifactId>
+           <version>${foundationdb.version}</version>
+       </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Prometheus Client -->
+       <dependency>
+           <groupId>io.prometheus</groupId>
+           <artifactId>simpleclient</artifactId>
+           <version>0.0.21</version>
+       </dependency>
+       <dependency>
+           <groupId>io.prometheus</groupId>
+           <artifactId>simpleclient_common</artifactId>
+           <version>0.0.21</version>
+       </dependency>
+
+      <dependency>
+          <groupId>com.palantir.docker.compose</groupId>
+          <artifactId>docker-compose-rule-core</artifactId>
+          <version>1.7.0</version>
+          <scope>test</scope>
+      </dependency>
+
+    <!-- The following two logging related dependency modules are necessary.
+         the logback-classic will bring in logback-classic related jar. Otherwise, we will see the following warning
+         message on console, even although log4j related jar and the log4j.properties are already in place, and
+         point to the following web-site for explanation:
+
+         https://www.slf4j.org/codes.html#StaticLoggerBinder
+
+         This warning message is reported when the org.slf4j.impl.StaticLoggerBinder class could not be loaded into memory.
+         This happens when no appropriate SLF4J binding could be found on the class path.
+         Placing one (and only one) of slf4j-nop.jar slf4j-simple.jar, slf4j-log4j12.jar, slf4j-jdk14.jar
+         or logback-classic.jar on the class path should solve the problem.
+      -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <directory>${basedir}/target</directory>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>compile</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>me.fabriciorby</groupId>-->
+<!--                        <artifactId>maven-surefire-junit5-tree-reporter</artifactId>-->
+<!--                        <version>1.1.0</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+                <configuration>
+                    <parallel>none</parallel>
+                    <runOrder>alphabetical</runOrder>
+                    <failIfNoTests>false</failIfNoTests>
+                    <excludes>
+                        <exclude>**/*PerformanceTest.java</exclude>
+                        <exclude>**/*ConcurrentTest.java</exclude>
+                        <exclude>**/*Groovy*Test.java</exclude>
+                        <exclude>**/*ComputerTest.java</exclude>
+                        <exclude>**/*ProcessTest.java</exclude>
+                        <exclude>**/*ProcessPerformanceTest.java</exclude>
+                        <exclude>**/*StructureTest.java</exclude>
+                        <exclude>**/FoundationDBTransactionTest.java</exclude>
+                    </excludes>
+                    <skip>${test.skip.default}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>tinkerpop-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration combine.self="override">
+                            <reuseForks>false</reuseForks>
+                            <forkCount>1</forkCount>
+                            <parallel>none</parallel>
+                            <threadCount>1</threadCount>
+                            <perCoreThreadCount>false</perCoreThreadCount>
+                            <includes>
+                                <!-- Include all Tinkerpop tests -->
+                                <include>**/blueprints/*Test.java</include>
+                                <!-- Include all JanusGraph tests -->
+                                <include>**/diskstorage/foundationdb/*Test.java</include>
+                                <include>**/graphdb/database/management/FoundationDBManagementTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphConcurrentTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphPerformanceMemoryTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBIsolationLevelTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBOLAPTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBOperationCountingTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBPartitionGraphTest.java</include>
+                            </includes>
+                            <runOrder>alphabetical</runOrder>
+                            <skipTests>${test.skip.tp}</skipTests>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>nugraph-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration combine.self="override">
+                            <reuseForks>false</reuseForks>
+                            <forkCount>1</forkCount>
+                            <parallel>none</parallel>
+                            <threadCount>1</threadCount>
+                            <perCoreThreadCount>false</perCoreThreadCount>
+                            <includes>
+                                <!-- Include all JanusGraph tests -->
+                                <include>**/diskstorage/foundationdb/*Test.java</include>
+                                <include>**/graphdb/database/management/FoundationDBManagementTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphConcurrentTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphPerformanceMemoryTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBIsolationLevelTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBOLAPTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBOperationCountingTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBPartitionGraphTest.java</include>
+                            </includes>
+                            <runOrder>alphabetical</runOrder>
+                            <skipTests>${test.skip.tp}</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.6</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.0.2155</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

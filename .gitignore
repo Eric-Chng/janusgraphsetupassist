@@ -1,0 +1,57 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Java template
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+*.ipr
+*.iws
+.DS_Store
+.idea
+.vertx
+*.iml
+target/
+logs/
+log/
+var/
+bin/*.log
+bin/nohup.out
+bin/monstordb_dev/generated
+bin/monstordb_dev/generated/*
+
+raptor.xml
+
+IAFRuntime.log
+
+logFile.log
+
+.project
+
+.classpath
+
+*.prefs
+
+nohup.out
+
+ebaykeystore.jks
+
+FideliusClient
+TomcatThreadPoolSizeBean
+XslTransformObjectCacheConfig64.xml
+enevelopeapi
+esamscache
+nameservice
+temp_persist_config_*
+ConfigRoot
+jub*
+
+#Mac
+.DS_Store

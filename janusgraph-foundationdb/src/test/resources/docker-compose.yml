@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  db:
+    image: ecr.vip.ebayc3.com/hieunguyen/fdb:v6.2.15_Final
+    volumes:
+    - ./etc:/etc/foundationdb
+    ports:
+    - "4500:4500"
+    tty: true

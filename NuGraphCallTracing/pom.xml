@@ -1,0 +1,176 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ebay.nugraph</groupId>
+    <artifactId>nugraph-calltracing</artifactId>
+    <version>1.6.5-RELEASE</version>
+    <packaging>jar</packaging>
+    <name>NuGraph Call Tracing Common Interface </name>
+
+    <properties>
+        <maven.compiler.plugin.version>3.6.2</maven.compiler.plugin.version>
+        <jdk.version>1.8</jdk.version>
+        <dependency.plugin.version>2.10</dependency.plugin.version>
+        <test.skip.default>false</test.skip.default>
+        <test.skip.tp>true</test.skip.tp>
+        <log4j.version>1.2.16</log4j.version>
+   </properties>
+
+    <!-- The following are the candidate repositories that mvn will pull the dependent JAR files from -->
+    <repositories>
+        <repository>
+            <id>atlassian.releases</id>
+            <url>https://maven.atlassian.com/3rdparty/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.32.Final</version>
+	    <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+   </dependencies>
+
+    <build>
+        <directory>${basedir}/target</directory>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>compile</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.15</version>
+                <configuration>
+                    <parallel>none</parallel>
+                    <runOrder>alphabetical</runOrder>
+                    <failIfNoTests>false</failIfNoTests>
+                    <excludes>
+                        <exclude>**/*PerformanceTest.java</exclude>
+                        <exclude>**/*ConcurrentTest.java</exclude>
+                        <exclude>**/*Groovy*Test.java</exclude>
+                        <exclude>**/*ComputerTest.java</exclude>
+                        <exclude>**/*ProcessTest.java</exclude>
+                        <exclude>**/*ProcessPerformanceTest.java</exclude>
+                        <exclude>**/*StructureTest.java</exclude>
+                        <exclude>**/FoundationDBTransactionTest.java</exclude>
+                    </excludes>
+                    <skip>${test.skip.default}</skip>
+                    <!-- Use log4j.properties from module test resources -->
+                    <systemProperties>
+                        <property>
+                            <name>log4j.configuration</name>
+                            <value>file:${project.build.directory}/test-classes/log4j.properties</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>nugraph-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration combine.self="override">
+                            <reuseForks>false</reuseForks>
+                            <forkCount>1</forkCount>
+                            <parallel>none</parallel>
+                            <threadCount>1</threadCount>
+                            <perCoreThreadCount>false</perCoreThreadCount>
+                            <includes>
+                                <include>**/*Groovy*Test.java</include>
+                                <include>**/diskstorage/foundationdb/*Test.java</include>
+                                <include>**/graphdb/*Test.java</include>
+                                <include>**/graphdb/database/management/*Test.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphConcurrentTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBGraphTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBOLAPTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBOperationCountingTest.java</include>
+                                <include>**/graphdb/foundationdb/FoundationDBPartitionGraphTest.java</include>
+                                <!-- Must revisit this. Always pass locally but always fail on Jenkin job? -->
+                                <!--<include>**/graphdb/foundationdb/FoundationDBGraphPerformanceMemoryTest.java</include>-->
+                            </includes>
+                            <runOrder>alphabetical</runOrder>
+                            <skipTests>${test.skip.tp}</skipTests>
+                            <systemPropertyVariables>
+                                <build.dir>${project.build.directory}</build.dir>
+                                <log4j.configuration>file:${project.build.directory}/test-classes/log4j.properties</log4j.configuration>
+                                <is.testing>true</is.testing>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <updateOnly>true</updateOnly>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>GraphTestApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+    </build>
+
+</project>
