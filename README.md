@@ -5,6 +5,7 @@
     1. Run `mvn clean install -DskipTests`
 3. Inside janusgraph-foundationdb
     1. Run `mvn clean install -DskipTests`
+    2. Run `./install.sh ../janusgraph-1.0.0`
 
 # Running Server
 1. While inside janusgraph-1.0.0 folder, run `./bin/janusgraph-server.sh conf/gremlin-server/gremlin-server-deploy-local.yaml`
